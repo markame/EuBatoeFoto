@@ -1,0 +1,72 @@
+/* Utilizando fonte externa */
+@font-face {
+    font-family: 'Kyiv';
+    src: url("../fonts/KyivTypeSans-Heavy-.otf") format('opentype');
+    font-style: normal;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+h1 {
+    font-family: 'Kyiv', serif;
+    color: #f0f0f0;
+    margin-bottom: -10px;
+    font-size: 50px;
+}
+
+#preview-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    max-width: 900px;
+    margin-top: 10px;
+    margin-left: 100px;
+}
+
+#preview {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+}
+
+#preview img {
+    width: 500px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+video {
+    width: 740px;
+    height: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+}
+
+.camera-icon {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: block;
+    margin-bottom: 10px;
+}
+
+#icon-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-left: 20px;
+}
+
+#cameraSelect {
+    display: none;
+}
