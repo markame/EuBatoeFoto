@@ -1,1 +1,6 @@
-Apresentamos o nosso projeto de cabine fotográfica desenvolvido por nossa equipe de alunos de ADS do 4º período do UNIFACEMA! Com nosso aplicativo, transformamos a captura de fotos em uma experiência incrível e divertida. Os usuários podem escolher entre diferentes molduras e adicionar efeitos especiais às suas fotos para torná-las verdadeiramente únicas. Com apenas um clique, nossa cabine fotográfica utiliza a webcam integrada para capturar imagens instantaneamente, permitindo que os alunos capturem momentos memoráveis com seus amigos e colegas. Além disso, oferecemos a opção de carregar suas próprias imagens para adicionar à moldura, proporcionando ainda mais personalização e diversão. Nosso projeto é perfeito para eventos, festas e qualquer ocasião em que você queira registrar e compartilhar momentos especiais de forma criativa e descontraída. Venha conferir o nosso trabalho e se divertir com a nossa cabine fotográfica!
+# PhotoCap
+
+### 🚧🚧alterações a serem feitas🚧🚧
+
+- (front) a pagina precisa correponder melhor ao prototipo do figma
+- (Back) Algoritmo precisa ser alterado para reconhcer uma impressora e fazer a impressao assim que o botão de impressão for apertado. 
