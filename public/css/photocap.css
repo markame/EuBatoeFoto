@@ -1,8 +1,69 @@
+html{
+    cursor: none;
+}
+
+
+.custom-cursor {
+    position: fixed;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    width: 50px;
+    margin-left: -25px;
+    margin-top: -25px;
+    aspect-ratio: 1;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    background-color: white;
+    transition-property: transform, scale, opacity, border-color;
+    transition-duration: 250ms;
+    transition-timing-function: ease-in-out;
+    scale: 0.6;
+    z-index: 10;
+}
+.custom-cursor--near-icons {
+    transition: none; /* Remove a transição de propriedades */
+    border-color: black;
+    scale: 2.31;
+    background-color: transparent;
+    mix-blend-mode: normal;
+
+}
+.custom-cursor--img-hover {
+
+}
+.custom-cursor--init {
+    opacity: 6;
+}
+
 /* Utilizando fonte externa */
 @font-face {
     font-family: 'Kyiv';
     src: url("../fonts/KyivTypeSans-Heavy-.otf") format('opentype');
     font-style: normal;
+
+}
+
+
+body {
+    background: linear-gradient(-45deg, #7300ff, #5ea6f9, #8b56ec, #1e4af5);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    height: 100vh;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 body {
@@ -16,10 +77,21 @@ body {
 }
 
 h1 {
-    font-family: 'Kyiv', serif;
+    font-family: 'Kyiv', sans-serif;
     color: #f0f0f0;
+    margin-left: 160px;
     margin-bottom: -10px;
-    font-size: 50px;
+    font-size: 60px;
+}
+
+footer{
+    font-family: Inter, sans-serif;
+    color: #f0f0f0;
+    margin-top: 25px;
+    font-size: 25px;
+    font-weight: 600;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    margin-left: 160px;
 }
 
 #preview-container {
@@ -30,33 +102,72 @@ h1 {
     max-width: 900px;
     margin-top: 10px;
     margin-left: 100px;
+    position: relative;
 }
 
 #preview {
+    position: absolute;
+    top: -100px;
+    left: -500px;
+    align-items: flex-start;
     display: flex;
     flex-direction: column;
-    margin-right: 20px;
+    margin-right: 50px;
 }
 
 #preview img {
-    width: 500px;
-    margin-bottom: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    height: 200px;
+    margin-right: 25px;
+    border-radius: 10px;
+    gap: 10px;
+    margin-bottom: 45px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+.video-container {
+    position: relative;
+    z-index: 1;
+    right: -200px;
+}
+
+#smileIcon, #flowerIcon {
+    position: absolute;
+    z-index: 1;
+}
+
+#smileIcon {
+    top: -70px;
+    right: -70px;
+    width: 150px;
+    height: 150px;
+}
+
+#flowerIcon {
+    width: 400px;
+    height: 200px;
+    bottom: -70px;
+    left: -200px;
 }
 
 video {
-    width: 740px;
-    height: 400px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    width: 900px;
+    height: 600px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.camera-icon{
+    width: 110px;
+    height: 110px;
+    display: block;
+    margin-bottom: 20px;
+    right: -800px;
+    transition: transform 0.3s;
 
 }
 
-.camera-icon {
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    display: block;
-    margin-bottom: 10px;
+.camera-icon:hover {
+    transform: scale(1.2); /* Aumenta o tamanho do ícone em 10% */
 }
 
 #icon-container {
@@ -64,9 +175,21 @@ video {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-left: 20px;
+    margin-left: 250px;
+    margin-top: 130px;
 }
 
 #cameraSelect {
     display: none;
 }
+
+.photo {
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+.photo.drag-down {
+    transform: translateY(100px);
+    opacity: 0;
+}
+
+
