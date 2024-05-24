@@ -68,10 +68,15 @@ document.getElementById('takeSnapshotIcon').addEventListener('click', () => {
         // Criando um novo elemento de imagem para pré-visualização
         const img = document.createElement('img');
         img.src = imageData;
-        img.classList.add('photo'); //Adiciona a classe photo as fotos que forem colocadas no preview para adicionar animação
+        img.classList.add('photo', 'fade-in'); //Adiciona a classe photo e fade-in as fotos que forem colocadas no preview para adicionar animação
         img.style.width = '400'; // ajusta o tamanho da pré-visualização conforme necessário
         img.style.height = '200';
         document.getElementById('preview').appendChild(img);
+
+        //Tira a classe fade in depois de um tempo setado
+        setTimeout(() => {
+            img.classList.remove('fade-in');
+        }, 100);
 
         photosTaken++;
     } else {
@@ -166,3 +171,4 @@ document.getElementById('takePrint').addEventListener('click', () => {
         location.reload(); // Atualiza a página
     }, 500);}
 );
+
