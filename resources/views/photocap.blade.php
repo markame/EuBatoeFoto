@@ -8,16 +8,24 @@
     <title>EuBatoéFoto</title>
     <link href="{{ asset('css/photocap.css') }}" rel="stylesheet">
 
+
 </head>
+<body>
 
-
-<body background="{{ asset('images/BG.png') }}">
+<div class="custom-cursor"></div>
+{{--<body background="{{ asset('images/newBG.png') }}">--}}
 
 <h1>EuBatoéFoto</h1>
 
 <div id="preview-container">
+
     <div id="preview"></div>
-    <video autoplay></video>
+
+    <div class="video-container">
+        <video autoplay></video>
+        <img src="{{ asset('images/smile.png') }}" id="smileIcon" alt="Smile">
+        <img src="{{ asset('images/flower.png') }}" id="flowerIcon" alt="Flower">
+    </div>
 
     <div id="icon-container">
         <img src="{{ asset('images/switch camera.png') }}" id="switchCameraIcon" alt="Trocar Câmera" class="camera-icon">
@@ -29,8 +37,11 @@
 <canvas style="display:none;"></canvas>
 <select id="cameraSelect" style="display: none;"></select>
 
+<footer>@ads.unifacema</footer>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="{{ asset('js/photocap.js') }}"></script>
+<script src="{{ asset('js/cursor.js') }}"></script>
 
 </body>
 </html>

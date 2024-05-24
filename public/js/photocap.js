@@ -3,8 +3,8 @@ const photoLimit = 3; // Limite máximo de fotos que podem ser tiradas
 let photosTaken = 0; // Contador pro número de fotos tiradas
 let currentStream = null; // Variável para armazenar o stream de vídeo atual
 
-const VIDEO_WIDTH = 840; // Largura do vídeo (tela grande principal)
-const VIDEO_HEIGHT = 490; // Altura do video
+const VIDEO_WIDTH = 900; // Largura do vídeo (tela grande principal)
+const VIDEO_HEIGHT = 600; // Altura do video
 
 // Função pra reconhecer as câmeras disponíveis e colocar elas dentro do select
 navigator.mediaDevices.enumerateDevices().then(getCameras).catch(handleError);
@@ -68,8 +68,9 @@ document.getElementById('takeSnapshotIcon').addEventListener('click', () => {
         // Criando um novo elemento de imagem para pré-visualização
         const img = document.createElement('img');
         img.src = imageData;
-        img.style.width = '100px'; // ajusta o tamanho da pré-visualização conforme necessário
-        img.style.height = 'auto';
+        img.classList.add('photo'); //Adiciona a classe photo as fotos que forem colocadas no preview para adicionar animação
+        img.style.width = '400'; // ajusta o tamanho da pré-visualização conforme necessário
+        img.style.height = '200';
         document.getElementById('preview').appendChild(img);
 
         photosTaken++;
@@ -151,3 +152,17 @@ document.getElementById('takePrint').addEventListener('click', async () => {
         doc.save('fotos.pdf'); // nome padrão do pdf
     };
 });
+
+document.getElementById('takePrint').addEventListener('click', () => {
+    const photos = document.querySelectorAll('#preview img'); // Seleciona todas as imagens dentro do preview
+
+    // Adiciona a classe para arrastar para baixo
+    photos.forEach(photo => {
+        photo.classList.add('drag-down');
+    });
+
+    // Aguarda a conclusão da animação antes de atualizar a página
+    setTimeout(() => {
+        location.reload(); // Atualiza a página
+    }, 500);}
+);
