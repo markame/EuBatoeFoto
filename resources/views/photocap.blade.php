@@ -12,6 +12,8 @@
 </head>
 <body>
 
+
+
 <div class="custom-cursor"></div>
 {{--<body background="{{ asset('images/newBG.png') }}">--}}
 
