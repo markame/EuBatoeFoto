@@ -8,12 +8,8 @@ services:
   # custom image
   projetopi:
     build:
-      args:
-        user: pablo
-        uid: 1000
-      context: ./
+      context: .
       dockerfile: Dockerfile
-    image: pablo/projetopi
     working_dir: /var/www/
     volumes:
       - ./:/var/www/
@@ -85,10 +81,7 @@ services:
   # queue
   queue:
     build:
-      args:
-        user: pablo
-        uid: 1000
-      context: ./
+      context: .
       dockerfile: Dockerfile
     restart: always
     command: "php artisan queue:work"
