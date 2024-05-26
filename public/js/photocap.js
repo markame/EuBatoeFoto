@@ -1,5 +1,5 @@
 const video = document.querySelector('video');
-const photoLimit = 6; // Limite máximo de fotos que podem ser tiradas
+const photoLimit = 3; // Limite máximo de fotos que podem ser tiradas
 let photosTaken = 0; // Contador pro número de fotos tiradas
 let currentStream = null; // Variável para armazenar o stream de vídeo atual
 
@@ -69,8 +69,8 @@ document.getElementById('takeSnapshotIcon').addEventListener('click', () => {
         const img = document.createElement('img');
         img.src = imageData;
         img.classList.add('photo', 'fade-in'); //Adiciona a classe photo e fade-in as fotos que forem colocadas no preview para adicionar animação
-        img.style.width = '300'; // ajusta o tamanho da pré-visualização conforme necessário
-        img.style.height = '200';
+        img.style.width = '400'; // ajusta o tamanho da pré-visualização conforme necessário
+        img.style.height = '220';
         document.getElementById('preview').appendChild(img);
 
         //Tira a classe fade in depois de um tempo setado
@@ -80,7 +80,7 @@ document.getElementById('takeSnapshotIcon').addEventListener('click', () => {
 
         photosTaken++;
     } else {
-        alert('Máximo de 6 fotos atingido.');
+        alert('Máximo de 3 fotos atingido.');
     }
 });
 
@@ -95,6 +95,7 @@ document.getElementById('cameraSelect').addEventListener('change', (event) => {
     switchCamera(event.target.value);
 });
 
+// Função para gerar o PDF com as fotos capturadas e o rodapé
 // Função para gerar o PDF com as fotos capturadas e o rodapé
 document.getElementById('takePrint').addEventListener('click', async () => {
     const { jsPDF } = window.jspdf;
@@ -111,67 +112,72 @@ document.getElementById('takePrint').addEventListener('click', async () => {
         format: 'a5'
     });
 
-    const margin = 5; // Margem nas laterais
-    const pageWidth = 148; // Largura da página A5 em mm
-    const pageHeight = 210; // Altura da página A5 em mm
-    const availableWidth = pageWidth - 2 * margin; // Largura disponível para as imagens
-    const maxImageHeight = 50; // Altura máxima da imagem
-    const spacing = 5; // Espaçamento entre as imagens
+    const margin = 5;
+    const pageWidth = 148;
+    const pageHeight = 210;
+    const availableWidth = pageWidth - 2 * margin;
+    const maxImageHeight = 50;
+    const spacing = 5;
 
-    let yOffset = 5; // Posição Y inicial com uma margem superior
+    let yOffset = 5;
 
     const logoSrc = 'http://localhost/images/rodape.png';
     const logo = new Image();
     logo.src = logoSrc;
     logo.onload = () => {
-        const logoWidth = availableWidth / 2; // Largura disponível em mm
-        const logoHeight = logo.height * logoWidth / logo.width; // Mantem proporção
+        const logoWidth = availableWidth / 2;
+        const logoHeight = logo.height * logoWidth / logo.width;
 
-        // Verifica se todas as imagens e o rodapé cabem na mesma página
-        const totalHeight = ((images.length / 2) * maxImageHeight) + ((images.length - 1) * spacing) + logoHeight;
+        const totalHeight = (maxImageHeight * 3) + (spacing * 2) + logoHeight;
         if (totalHeight > pageHeight - yOffset) {
             doc.addPage();
             yOffset = 10;
         }
 
-        for (let i = 0; i < images.length; i++) {
+        // Adiciona a primeira coluna
+        for (let i = 0; i < Math.min(3, images.length); i++) {
             const img = images[i];
             const imgWidth = (pageWidth / 2) - 2 * margin;
-            const imgHeight = Math.min(img.naturalHeight * imgWidth / img.naturalWidth, maxImageHeight); // Manter proporção e limitar altura
+            const imgHeight = Math.min(img.naturalHeight * imgWidth / img.naturalWidth, maxImageHeight);
 
-            // Corta a imagem proporcionalmente se for necessário
             const cropX = 0;
             const cropY = (img.naturalHeight - (img.naturalWidth * maxImageHeight / imgWidth)) / 2;
             const cropWidth = img.naturalWidth;
             const cropHeight = img.naturalWidth * maxImageHeight / imgWidth;
 
-            let xOffset = ((pageWidth / 2) - imgWidth) / 2; // Centraliza a imagem horizontalmente na coluna
-
-            // Verifica se atingiu o limite da coluna e inicia a segunda coluna
-            if (i >= 3) {
-                xOffset += (pageWidth / 2);
-                // "Zera" a posicao y para a proxima coluna
-                if (i == 3) {
-                    yOffset = 5;
-                }
-            }
-
+            let xOffset = ((pageWidth / 2) - imgWidth) / 2;
             doc.addImage(img.src, 'JPEG', xOffset, yOffset, imgWidth, imgHeight, undefined, undefined, 0, cropX, cropY, cropWidth, cropHeight);
-            yOffset += imgHeight + spacing; // Adiciona margem entre as imagens
+            yOffset += imgHeight + spacing;
         }
 
-        yOffset += (((pageHeight - yOffset) / 2) / 2); // Centraliza a logo verticalmente apos as imagens
+        // Adiciona a segunda coluna (repetindo a primeira)
+        yOffset = 5;
+        for (let i = 0; i < Math.min(3, images.length); i++) {
+            const img = images[i];
+            const imgWidth = (pageWidth / 2) - 2 * margin;
+            const imgHeight = Math.min(img.naturalHeight * imgWidth / img.naturalWidth, maxImageHeight);
 
-        const xOffset = ((pageWidth / 2) - logoWidth) / 2; // Centraliza o rodapé horizontalmente
-        doc.addImage(logo, 'PNG', xOffset, yOffset, logoWidth, logoHeight, '', 'FAST'); // Adiciona rodapé com melhor qualidade (necessario porque anteriormente o rodapé estava com qualidade ruim) | Coluna 1
-        doc.addImage(logo, 'PNG', xOffset + (pageWidth / 2), yOffset, logoWidth, logoHeight, '', 'FAST'); // Adiciona rodapé com melhor qualidade (necessario porque anteriormente o rodapé estava com qualidade ruim) | Coluna 2
+            const cropX = 0;
+            const cropY = (img.naturalHeight - (img.naturalWidth * maxImageHeight / imgWidth)) / 2;
+            const cropWidth = img.naturalWidth;
+            const cropHeight = img.naturalWidth * maxImageHeight / imgWidth;
 
-        doc.autoPrint(); // Este é o comando para imprimir
+            let xOffset = ((pageWidth / 2) - imgWidth) / 2 + (pageWidth / 2);
+            doc.addImage(img.src, 'JPEG', xOffset, yOffset, imgWidth, imgHeight, undefined, undefined, 0, cropX, cropY, cropWidth, cropHeight);
+            yOffset += imgHeight + spacing;
+        }
+
+        yOffset += (((pageHeight - yOffset) / 2) / 2);
+
+        const xOffset = ((pageWidth / 2) - logoWidth) / 2;
+        doc.addImage(logo, 'PNG', xOffset, yOffset, logoWidth, logoHeight, '', 'FAST');
+        doc.addImage(logo, 'PNG', xOffset + (pageWidth / 2), yOffset, logoWidth, logoHeight, '', 'FAST');
+
+        doc.autoPrint();
         window.open(doc.output('bloburl'), '_self');
-
-        //doc.save('fotos.pdf'); // nome padrão do pdf
     };
 });
+
 
 document.getElementById('takePrint').addEventListener('click', () => {
     const photos = document.querySelectorAll('#preview img'); // Seleciona todas as imagens dentro do preview
