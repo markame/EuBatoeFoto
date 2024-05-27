@@ -36,6 +36,7 @@
 </div>
 
 <canvas style="display:none;"></canvas>
+<iframe id="pdfIframe" style="display: none;"></iframe>
 <select id="cameraSelect" style="display: none;"></select>
 
 <footer>@ads.unifacema</footer>

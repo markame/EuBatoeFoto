@@ -96,7 +96,6 @@ document.getElementById('cameraSelect').addEventListener('change', (event) => {
 });
 
 // Função para gerar o PDF com as fotos capturadas e o rodapé
-// Função para gerar o PDF com as fotos capturadas e o rodapé
 document.getElementById('takePrint').addEventListener('click', async () => {
     const { jsPDF } = window.jspdf;
     const preview = document.getElementById('preview');
@@ -121,7 +120,7 @@ document.getElementById('takePrint').addEventListener('click', async () => {
 
     let yOffset = 5;
 
-    const logoSrc = 'http://localhost/images/rodape.png';
+    const logoSrc = 'http://localhost/images/rodapeV2.png';
     const logo = new Image();
     logo.src = logoSrc;
     logo.onload = () => {
@@ -146,7 +145,8 @@ document.getElementById('takePrint').addEventListener('click', async () => {
             const cropHeight = img.naturalWidth * maxImageHeight / imgWidth;
 
             let xOffset = ((pageWidth / 2) - imgWidth) / 2;
-            doc.addImage(img.src, 'JPEG', xOffset, yOffset, imgWidth, imgHeight, undefined, undefined, 0, cropX, cropY, cropWidth, cropHeight);
+            doc.addImage(img.src, 'JPEG', xOffset, yOffset, imgWidth, imgHeight, undefined, undefined, 0, cropX, cropY,
+                cropWidth, cropHeight);
             yOffset += imgHeight + spacing;
         }
 
@@ -163,7 +163,8 @@ document.getElementById('takePrint').addEventListener('click', async () => {
             const cropHeight = img.naturalWidth * maxImageHeight / imgWidth;
 
             let xOffset = ((pageWidth / 2) - imgWidth) / 2 + (pageWidth / 2);
-            doc.addImage(img.src, 'JPEG', xOffset, yOffset, imgWidth, imgHeight, undefined, undefined, 0, cropX, cropY, cropWidth, cropHeight);
+            doc.addImage(img.src, 'JPEG', xOffset, yOffset, imgWidth, imgHeight, undefined, undefined, 0, cropX, cropY,
+                cropWidth, cropHeight);
             yOffset += imgHeight + spacing;
         }
 
@@ -174,7 +175,24 @@ document.getElementById('takePrint').addEventListener('click', async () => {
         doc.addImage(logo, 'PNG', xOffset + (pageWidth / 2), yOffset, logoWidth, logoHeight, '', 'FAST');
 
         doc.autoPrint();
-        window.open(doc.output('bloburl'), '_self');
+
+        const pdfBlob = doc.output('blob');
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        const iframe = document.getElementById('pdfIframe');
+        iframe.src = pdfUrl;
+
+        const afterPrintHandler = () => {
+            window.removeEventListener('afterprint', afterPrintHandler);
+            location.reload();
+        };
+
+        window.addEventListener('afterprint', afterPrintHandler);
+
+        iframe.onload = () => {
+            iframe.contentWindow.print();
+            preview.innerHTML = ''; // Limpa o preview após a impressão
+            photosTaken = 0; // Reinicia o contador de fotos tiradas
+        };
     };
 });
 
@@ -187,10 +205,12 @@ document.getElementById('takePrint').addEventListener('click', () => {
         photo.classList.add('drag-down');
     });
 
-    // Aguarda a conclusão da animação antes de atualizar a página
-    setTimeout(() => {
-        location.reload(); // Atualiza a página
-    }, 500);
-}
-);
+    // Reinicia o contador de fotos tiradas após a impressão
+    const afterPrintHandler = () => {
+        window.removeEventListener('afterprint', afterPrintHandler);
+        photosTaken = 0; // Reinicia o contador de fotos tiradas
+    };
+
+    window.addEventListener('afterprint', afterPrintHandler);
+});
 
