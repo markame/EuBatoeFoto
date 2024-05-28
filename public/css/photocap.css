@@ -155,7 +155,7 @@ footer{
 }
 
 #timer{
-    /*display: none;*/
+    display: none;
     position: fixed;
     z-index: 2;
     transform: rotate(5deg);
