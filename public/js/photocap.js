@@ -1,13 +1,44 @@
 const video = document.querySelector('video');
 const photoLimit = 3; // Limite máximo de fotos que podem ser tiradas
-let photosTaken = 0; // Contador pro número de fotos tiradas
+let photosTaken = 0; // Contador para o número de fotos tiradas
 let currentStream = null; // Variável para armazenar o stream de vídeo atual
 let timer; // Variável para o temporizador de fotos
 
 const VIDEO_WIDTH = 900; // Largura do vídeo (tela grande principal)
-const VIDEO_HEIGHT = 600; // Altura do video
+const VIDEO_HEIGHT = 600; // Altura do vídeo
 
-// Função pra reconhecer as câmeras disponíveis e colocar elas dentro do select
+const timerElement = document.getElementById('timer');
+let countdown = 3; // Contagem inicial de 3 segundos
+
+// Função para atualizar o timer no front-end
+function updateTimer() {
+    if (countdown > 0) {
+        timerElement.textContent = `${countdown}`;
+        if (countdown === 3) {
+            timerElement.style.color = '#32CD32';
+        } else if (countdown === 2) {
+            timerElement.style.color = '#ff5e00';
+        } else if (countdown === 1) {
+            timerElement.style.color = '#FF0000';
+        }
+        countdown--;
+    } else {
+        takeSnapshot();
+        countdown = 3; // Reinicia a contagem para a próxima foto, se houver
+    }
+}
+
+// Função para iniciar o timer ao apertar o botão de tirar foto
+function startPhotoTimer() {
+    if (photosTaken < photoLimit) {
+        timerElement.style.display = 'block'; // Exibe o timer
+        timerElement.textContent = `${countdown}`;
+        timerElement.style.color = '#32CD32'; // Define a cor inicial
+        timer = setInterval(updateTimer, 1000);
+    }
+}
+
+// Função para reconhecer as câmeras disponíveis e colocar elas dentro do select
 navigator.mediaDevices.enumerateDevices().then(getCameras).catch(handleError);
 
 function getCameras(devices) {
@@ -26,7 +57,7 @@ function getCameras(devices) {
     }
 }
 
-// Função para alternar entre as câmeras pra caso a webcam externa nao funcione ou a do notebook
+// Função para alternar entre as câmeras pra caso a webcam externa não funcione ou a do notebook
 function switchCamera(deviceId) {
     if (currentStream) {
         currentStream.getTracks().forEach(track => {
@@ -68,12 +99,12 @@ function takeSnapshot() {
     // Criando um novo elemento de imagem para pré-visualização
     const img = document.createElement('img');
     img.src = imageData;
-    img.classList.add('photo', 'fade-in'); //Adiciona a classe photo e fade-in as fotos que forem colocadas no preview para adicionar animação
-    img.style.width = '400'; // ajusta o tamanho da pré-visualização conforme necessário
-    img.style.height = '220';
+    img.classList.add('photo', 'fade-in'); // Adiciona a classe photo e fade-in as fotos que forem colocadas no preview para adicionar animação
+    img.style.width = '400px'; // Ajusta o tamanho da pré-visualização conforme necessário
+    img.style.height = '220px';
     document.getElementById('preview').appendChild(img);
 
-    //Tira a classe fade in depois de um tempo setado
+    // Tira a classe fade-in depois de um tempo setado
     setTimeout(() => {
         img.classList.remove('fade-in');
     }, 100);
@@ -83,17 +114,18 @@ function takeSnapshot() {
     // Verifica se chegou ao limite de fotos e para o timer
     if (photosTaken === photoLimit) {
         clearInterval(timer);
+        timerElement.style.display = 'none'; // Esconde o timer após a última foto
+    } else {
+        clearInterval(timer); // Limpa o intervalo atual para reiniciar a contagem
+        countdown = 3; // Reinicia a contagem para a próxima foto
+        startPhotoTimer(); // Reinicia o timer para a próxima foto
     }
 }
 
-// Função para capturar uma foto e adicioná-la ao preview
-document.getElementById('takeSnapshotIcon').addEventListener('click', () => {
-    if (photosTaken < photoLimit) {
-        timer = setInterval(takeSnapshot, 3000)
-    } else {
-        alert('Máximo de 3 fotos atingido.');
-    }
-});
+// Event listener para o botão de tirar foto
+document.getElementById('takeSnapshotIcon').addEventListener('click', startPhotoTimer);
+
+
 
 // Função para alternar a exibição do select de câmeras
 document.getElementById('switchCameraIcon').addEventListener('click', () => {

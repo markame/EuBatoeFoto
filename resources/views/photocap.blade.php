@@ -23,8 +23,12 @@
     <div id="preview"></div>
 
     <div class="video-container">
+
         <video autoplay></video>
+
+
         <img src="{{ asset('images/smile.png') }}" id="smileIcon" alt="Smile">
+        <img src="{{ asset('images/shine.png') }}" id="shineIcon" alt="Flash">
         <img src="{{ asset('images/flower.png') }}" id="flowerIcon" alt="Flower">
     </div>
 
@@ -34,6 +38,8 @@
         <img src="{{ asset('images/imprimir.png') }}" id="takePrint" alt="Realizar Impressão" class="camera-icon">
     </div>
 </div>
+
+<div id="timer" >3</div>
 
 <canvas style="display:none;"></canvas>
 <iframe id="pdfIframe" style="display: none;"></iframe>

@@ -135,7 +135,7 @@ footer{
     right: -200px;
 }
 
-#smileIcon, #flowerIcon {
+#smileIcon, #flowerIcon, #shineIcon{
     position: absolute;
     z-index: 1;
 }
@@ -146,6 +146,26 @@ footer{
     width: 150px;
     height: 150px;
 }
+#shineIcon{
+    transform: rotate(-10deg);
+    top: -100px;
+    left: -100px;
+    width: 180px;
+    height: 190px;
+}
+
+#timer{
+    /*display: none;*/
+    position: fixed;
+    z-index: 2;
+    transform: rotate(5deg);
+    font-family: 'Kyiv', sans-serif;
+    text-shadow: 2px 3px 3px rgba(128, 92, 107, 0.41);
+    top: 235px;
+    left: 553px;
+    font-size: 60px;
+}
+
 
 #flowerIcon {
     width: 400px;
