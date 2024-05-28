@@ -2,6 +2,7 @@ const video = document.querySelector('video');
 const photoLimit = 3; // Limite máximo de fotos que podem ser tiradas
 let photosTaken = 0; // Contador pro número de fotos tiradas
 let currentStream = null; // Variável para armazenar o stream de vídeo atual
+let timer; // Variável para o temporizador de fotos
 
 const VIDEO_WIDTH = 900; // Largura do vídeo (tela grande principal)
 const VIDEO_HEIGHT = 600; // Altura do video
@@ -52,33 +53,43 @@ function handleError(error) {
     console.error('Error: ', error);
 }
 
+// Função para tirar foto
+function takeSnapshot() {
+    const canvas = document.querySelector('canvas');
+    canvas.height = VIDEO_HEIGHT; // Definindo altura do canvas com base na altura do vídeo
+    canvas.width = VIDEO_WIDTH; // Definindo largura do canvas com base na largura do vídeo
+
+    const context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT); // Desenhar o vídeo no canvas com as dimensões especificadas
+
+    // Convertendo a imagem do canvas para URL de dados
+    const imageData = canvas.toDataURL('image/jpeg');
+
+    // Criando um novo elemento de imagem para pré-visualização
+    const img = document.createElement('img');
+    img.src = imageData;
+    img.classList.add('photo', 'fade-in'); //Adiciona a classe photo e fade-in as fotos que forem colocadas no preview para adicionar animação
+    img.style.width = '400'; // ajusta o tamanho da pré-visualização conforme necessário
+    img.style.height = '220';
+    document.getElementById('preview').appendChild(img);
+
+    //Tira a classe fade in depois de um tempo setado
+    setTimeout(() => {
+        img.classList.remove('fade-in');
+    }, 100);
+
+    photosTaken++;
+
+    // Verifica se chegou ao limite de fotos e para o timer
+    if (photosTaken === photoLimit) {
+        clearInterval(timer);
+    }
+}
+
 // Função para capturar uma foto e adicioná-la ao preview
 document.getElementById('takeSnapshotIcon').addEventListener('click', () => {
     if (photosTaken < photoLimit) {
-        const canvas = document.querySelector('canvas');
-        canvas.height = VIDEO_HEIGHT; // Definindo altura do canvas com base na altura do vídeo
-        canvas.width = VIDEO_WIDTH; // Definindo largura do canvas com base na largura do vídeo
-
-        const context = canvas.getContext('2d');
-        context.drawImage(video, 0, 0, VIDEO_WIDTH, VIDEO_HEIGHT); // Desenhar o vídeo no canvas com as dimensões especificadas
-
-        // Convertendo a imagem do canvas para URL de dados
-        const imageData = canvas.toDataURL('image/jpeg');
-
-        // Criando um novo elemento de imagem para pré-visualização
-        const img = document.createElement('img');
-        img.src = imageData;
-        img.classList.add('photo', 'fade-in'); //Adiciona a classe photo e fade-in as fotos que forem colocadas no preview para adicionar animação
-        img.style.width = '400'; // ajusta o tamanho da pré-visualização conforme necessário
-        img.style.height = '220';
-        document.getElementById('preview').appendChild(img);
-
-        //Tira a classe fade in depois de um tempo setado
-        setTimeout(() => {
-            img.classList.remove('fade-in');
-        }, 100);
-
-        photosTaken++;
+        timer = setInterval(takeSnapshot, 3000)
     } else {
         alert('Máximo de 3 fotos atingido.');
     }
@@ -133,7 +144,7 @@ document.getElementById('takePrint').addEventListener('click', async () => {
             yOffset = 10;
         }
 
-        // Adiciona a primeira coluna
+        // Adiciona as fotos ao PDF
         for (let i = 0; i < Math.min(3, images.length); i++) {
             const img = images[i];
             const imgWidth = (pageWidth / 2) - 2 * margin;
@@ -144,27 +155,16 @@ document.getElementById('takePrint').addEventListener('click', async () => {
             const cropWidth = img.naturalWidth;
             const cropHeight = img.naturalWidth * maxImageHeight / imgWidth;
 
+            // Adiciona a primeira foto da linha
             let xOffset = ((pageWidth / 2) - imgWidth) / 2;
             doc.addImage(img.src, 'JPEG', xOffset, yOffset, imgWidth, imgHeight, undefined, undefined, 0, cropX, cropY,
                 cropWidth, cropHeight);
-            yOffset += imgHeight + spacing;
-        }
 
-        // Adiciona a segunda coluna (repetindo a primeira)
-        yOffset = 5;
-        for (let i = 0; i < Math.min(3, images.length); i++) {
-            const img = images[i];
-            const imgWidth = (pageWidth / 2) - 2 * margin;
-            const imgHeight = Math.min(img.naturalHeight * imgWidth / img.naturalWidth, maxImageHeight);
-
-            const cropX = 0;
-            const cropY = (img.naturalHeight - (img.naturalWidth * maxImageHeight / imgWidth)) / 2;
-            const cropWidth = img.naturalWidth;
-            const cropHeight = img.naturalWidth * maxImageHeight / imgWidth;
-
-            let xOffset = ((pageWidth / 2) - imgWidth) / 2 + (pageWidth / 2);
+            // Adiciona a segunda foto duplicada coluna ao lado
+            xOffset += (pageWidth / 2);
             doc.addImage(img.src, 'JPEG', xOffset, yOffset, imgWidth, imgHeight, undefined, undefined, 0, cropX, cropY,
                 cropWidth, cropHeight);
+
             yOffset += imgHeight + spacing;
         }
 
