@@ -156,13 +156,16 @@ footer{
 
 #timer{
     display: none;
+    top: 20%;
+    left: 52%;
     position: fixed;
     z-index: 2;
     transform: rotate(5deg);
     font-family: 'Kyiv', sans-serif;
     text-shadow: 2px 3px 3px rgba(128, 92, 107, 0.41);
-    top: 235px;
-    left: 553px;
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
     font-size: 60px;
 }
 
